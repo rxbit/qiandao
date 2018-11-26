@@ -59,6 +59,9 @@ mailgun_key = ""
 # google analytics
 ga_key = ""
 
+tg_chat_id = ""
+tg_api_token = ""
+
 try:
     from local_config import *
 except ImportError:

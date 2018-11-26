@@ -165,6 +165,44 @@ def send_mail(to, subject, text=None, html=None, async=False, _from=u"签到提�
     )
     return client.fetch(req)
 
+import json
+
+def send_tg(subject, text=None, html=None, async=False):
+    if not config.tg_api_token or not config.tg_chat_id:
+        return
+
+    httpclient.AsyncHTTPClient.configure('tornado.curl_httpclient.CurlAsyncHTTPClient')
+    if async:
+        client = httpclient.AsyncHTTPClient()
+    else:
+        client = httpclient.HTTPClient()
+
+    if text:
+        msg = "*%s*\n" % subject
+        msg += text
+    elif html:
+        msg = "<b>%s</b>\n" % subject
+        msg += html
+    else:
+        msg = subject
+
+    param = {
+        "chat_id" : config.tg_chat_id,
+        "text" : msg,
+        "parse_mode" : "Markdown" if text else "HTML"
+    }
+
+    req = httpclient.HTTPRequest(
+        method="POST",
+        url="https://api.telegram.org/bot%s/sendMessage" % config.tg_api_token,
+        body=json.dumps(param),
+        headers={
+            "Content-Type": "application/json"
+        }
+    )
+    # print(json.dumps(param))
+    return client.fetch(req)
+
 
 import smtplib
 from email.mime.text import MIMEText

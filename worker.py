@@ -202,10 +202,9 @@ class MainWorker(object):
                     next=next)
             self.db.tpl.incr_failed(tpl['id'])
 
-            if task['success_count'] and task['last_failed_count'] and user['email_verified'] and user['email']\
-                    and self.is_tommorrow(next):
+            if task['success_count'] and task['last_failed_count'] and self.is_tommorrow(next):
                 try:
-                    _ = yield utils.send_mail(to=user['email'], subject=u"%s - 签到失败%s" % (
+                    _ = yield utils.send_tg(subject=u"%s - 签到失败%s" % (
                         tpl['sitename'], u' 已停止' if disabled else u""),
                     text=u"""
 您的 %(sitename)s [ %(siteurl)s ] 签到任务，执行 %(cnt)d次 失败。%(disable)s
@@ -222,7 +221,7 @@ class MainWorker(object):
                         taskid=task['id'],
                         ), async=True)
                 except Exception as e:
-                    logging.error('send mail error: %r', e)
+                    logging.error('send telegram error: %r', e)
 
             logger.error('taskid:%d tplid:%d failed! %r %.4fs', task['id'], task['tplid'], e, time.time()-start)
             raise gen.Return(False)
