@@ -111,6 +111,8 @@ class MainWorker(object):
 
     @staticmethod
     def is_tommorrow(next, gmt_offset=-8*60):
+        if not next:
+            return False
         date = datetime.datetime.utcfromtimestamp(next)
         now = datetime.datetime.utcnow()
         local_date = date - datetime.timedelta(minutes=gmt_offset)
