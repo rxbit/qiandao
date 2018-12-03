@@ -5,7 +5,7 @@ FROM python:2.7-alpine
 LABEL maintainer "rxbit <hazytint@gmail.com>"
 
 RUN apk update \
-    && apk add bash autoconf g++ \
+    && apk add bash autoconf g++ curl-dev \
     && mkdir -p /usr/src/app
 
 WORKDIR /usr/src/app
